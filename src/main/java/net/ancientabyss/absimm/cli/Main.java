@@ -4,8 +4,12 @@ import net.ancientabyss.absimm.core.Loader;
 import net.ancientabyss.absimm.core.ReactionClient;
 import net.ancientabyss.absimm.core.Story;
 import net.ancientabyss.absimm.core.StoryException;
+import net.ancientabyss.absimm.parser.Parser;
+import net.ancientabyss.absimm.parser.TxtParser;
 import net.ancientabyss.absimm.parser.XmlParser;
 import org.apache.commons.lang3.text.WordUtils;
+
+import java.util.HashMap;
 
 public class Main implements ReactionClient {
 
@@ -19,7 +23,7 @@ public class Main implements ReactionClient {
         if (story == null) return;
         try {
             story.tell();
-        } catch (StoryException  e) {
+        } catch (StoryException e) {
             System.err.println("Failed telling story: " + e.getMessage());
         }
         while (true) {
@@ -46,8 +50,8 @@ public class Main implements ReactionClient {
         }
         Story story;
         try {
-            story = new Loader(new XmlParser()).fromFile(args[0]);
-        } catch (StoryException e) {
+            story = new Loader(getParser(getFileExtension(args[0]))).fromFile(args[0]);
+        } catch (StoryException | NotSupportedException e) {
             System.err.println("Failed loading story: " + e.getMessage());
             return null;
         }
@@ -63,5 +67,25 @@ public class Main implements ReactionClient {
     public void reaction(String text) {
         String[] lines = text.split("\\\\n");
         for (String line : lines) System.out.println("" + WordUtils.wrap(line.trim(), 80, "\n", true));
+    }
+
+    private Parser getParser(String extension) throws NotSupportedException {
+        HashMap<String, Parser> parsers = new HashMap<>();
+        parsers.put("txt", new TxtParser());
+        parsers.put("xml", new XmlParser());
+        String cleanedUpExtension = extension.toLowerCase();
+        if (parsers.containsKey(cleanedUpExtension)) {
+            return parsers.get(cleanedUpExtension);
+        }
+        throw new NotSupportedException();
+    }
+
+    private String getFileExtension(String fileName) {
+        String extension = "";
+        int i = fileName.lastIndexOf('.');
+        if (i > 0) {
+            extension = fileName.substring(i + 1);
+        }
+        return extension;
     }
 }
