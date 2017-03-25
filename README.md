@@ -21,4 +21,4 @@ Use Gradle to build the project:
 
 Extract the zip file and run:
 
-        java -jar bin/absimm-cli.bat <storyfile>
+        java -jar bin/absimm-cli <storyfile>

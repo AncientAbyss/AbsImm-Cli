@@ -6,7 +6,6 @@ import net.ancientabyss.absimm.core.Story;
 import net.ancientabyss.absimm.core.StoryException;
 import net.ancientabyss.absimm.parser.XmlParser;
 import org.apache.commons.lang3.text.WordUtils;
-import org.jivesoftware.smack.SmackException;
 
 public class Main implements ReactionClient {
 
@@ -20,7 +19,7 @@ public class Main implements ReactionClient {
         if (story == null) return;
         try {
             story.tell();
-        } catch (StoryException | SmackException.NotConnectedException e) {
+        } catch (StoryException  e) {
             System.err.println("Failed telling story: " + e.getMessage());
         }
         while (true) {
@@ -29,7 +28,7 @@ public class Main implements ReactionClient {
 
             try {
                 story.interact(user_input);
-            } catch (StoryException | SmackException.NotConnectedException e) {
+            } catch (StoryException e) {
                 System.err.println(e.getMessage());
             }
         }
@@ -57,7 +56,7 @@ public class Main implements ReactionClient {
     }
 
     private static void printUsage() {
-        System.out.println("Usage: java -jar absimm-cli.jar <storyfile>");
+        System.out.println("Usage: absimm-cli <storyfile>");
     }
 
     @Override
