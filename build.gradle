@@ -1,0 +1,24 @@
+group 'net.ancientabyss.absimm'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'application'
+
+sourceCompatibility = 1.7
+
+mainClassName = "net.ancientabyss.absimm.cli.Main"
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.1'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "http://rod.bplaced.net/maven2"
+    }
+}
+
+dependencies {
+    compile 'net.ancientabyss.absimm:absimm-core:0.2-SNAPSHOT'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
